@@ -1,0 +1,2 @@
+streamlit==1.13.1
+wordcloud==1.9.3
