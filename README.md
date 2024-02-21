@@ -8,4 +8,4 @@ This is a demo UI of Stack Overflow prediction and analyics, we can focus on sev
 
 - run with : streamlit run StackOverflow.py
 
-![image alt](images\demo.png)
+![image alt](images/demo.png)
