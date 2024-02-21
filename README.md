@@ -5,3 +5,7 @@ This is a demo UI of Stack Overflow prediction and analyics, we can focus on sev
 2. Preprocess : word filter, stopwords, standardscaler
 3. Predict : Due to the local server, use decision trees instead of Naive Bayes or LSTM
 4. Charts : barchart, point, wordcloud
+
+- run with : streamlit run StackOverflow.py
+
+![image alt](images\demo.png)
