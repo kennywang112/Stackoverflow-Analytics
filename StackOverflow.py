@@ -185,9 +185,8 @@ col2.write(p)
 cold.write(chart)
 cold2.write(chart2)
 
-predict_title = '<p style="font-family:sans-serif; color:Green; font-size: 42px;">Text Classification Using sklearn</p>'
+predict_title = '<p style = "font-family:sans-serif; color: Green; font-size: 42px;"> Text Classification Using sklearn </p>'
 st.markdown(predict_title, unsafe_allow_html = True)
-#st.title('Text Classification Using sklearn')
 st.subheader('Is the question about java ? (yes : 1 , no : 0) & Java tag bar chart')
 
 slide_page = st.sidebar.slider('page of questions for machine learning ', 2, 10, 6)
@@ -208,34 +207,31 @@ tag_count.reset_index(inplace = True)
 
 col3, col4 = st.columns((5, 1))
 col3.write(data_ml.head(30))
-with col4:
+with col4 :
     st.bar_chart(data = tag_count, x = 'tag', y = 'count', use_container_width = True)
-
 # filter text
 data_ml['text'] = data_ml.apply(lambda x: remove_special_characters(x['text']), axis = 1)
 data_ml['text'] = data_ml['text'].apply(drop_numbers)
 stop = set(stopwords.words("english"))
-data_ml["text"] =data_ml["text"].map(remove_stopwords)
-
+data_ml["text"] = data_ml["text"].map(remove_stopwords)
 # creating bag of words
 cv = CountVectorizer(max_features = 2500)
 
 x = cv.fit_transform(data_ml['text']).toarray()
 y = data_ml['java_tag'].values
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.25, random_state = 0,shuffle = False)
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.25, random_state = 0, shuffle = False)
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 classifier = DecisionTreeClassifier(criterion = 'entropy', random_state = 0)
 classifier.fit(X_train, y_train)
 pred = classifier.predict(X_test)
-
-#process the predict sentences
-train_test_target = y_train.tolist()+pred.tolist()
+# process the predict sentences
+train_test_target = y_train.tolist() + pred.tolist()
 train_test_target = pd.DataFrame(train_test_target)
 data_copy.reset_index(drop = True, inplace = True)
-train_test_target.reset_index(drop=True, inplace = True)
-new_data_ml = pd.concat([data_copy,train_test_target],axis = 1)
+train_test_target.reset_index(drop = True, inplace = True)
+new_data_ml = pd.concat([data_copy, train_test_target], axis = 1)
 pred_sentence = []
 
 for i in range(round(0.75 * len(new_data_ml)) - 1, len(new_data_ml)) :
@@ -244,33 +240,34 @@ for i in range(round(0.75 * len(new_data_ml)) - 1, len(new_data_ml)) :
     
 frame_pred = pd.DataFrame(pred_sentence)
 frame_pred.columns = ['Predict Sentences']
-
+# data prediction
 st.subheader('Data training and test')
-st.write('training score :', classifier.score(X_train, y_train),'test score :', classifier.score(X_test, y_test))
+st.write('training score :', classifier.score(X_train, y_train), 'test score :', classifier.score(X_test, y_test))
 st.write("The test score is: ", round(accuracy_score(y_test, pred) * 100,2), '%')
 acc_dic = classification_report(y_test, pred, output_dict = True)
 acc_df = pd.DataFrame(acc_dic).transpose()
 st.write(acc_df)
 st.subheader('Sentences predicted have a java tag :sunglasses:')
 st.write(frame_pred)
+# plot each tags' frequency
 st.subheader("Companys' news")
-
 company_data = to_df()
-#plot each tags' frequency
 company_tag = pd.DataFrame(company_data[1].items(),columns = ['tagged', 'freq'])
 company_tag = company_tag.sort_values('freq',ascending = False)
 new_company_tag = company_tag[company_tag.freq > 2]
+# company plot 
 comp_plot = alt.Chart(new_company_tag).mark_bar().encode(
     x = alt.X('tagged', sort = None),
     y = 'freq',
 )
+st.write(comp_plot) 
+# company data
 comp_plot = comp_plot.properties(
     width = alt.Step(20)
 )
-st.write(comp_plot) 
 st.write(company_data[0])
+# wordcloud
 st.subheader('Most count words in new questions')
-
 m = 0
 dic = {}
 for i in range(10) :
